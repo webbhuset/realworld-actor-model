@@ -1,8 +1,8 @@
-# Login Form
+# Register Form
 
 ## Responsibilities
 
-- Render login form inputs
+- Register account form
 - Display error messages
 
 ## Interfaces
@@ -23,31 +23,30 @@ type alias User =
 type MsgIn
     = InitLabels
         { email : String
+        , username : String
         , password : String
         , heading : String
-        , needAnAccount : String
-        , needAnAccountHref : String
+        , haveAnAccount : String
+        , haveAnAccountHref : String
         }
     | RecvProblems (List Problem)
-    | RecvLoginSuccess User
+    | RecvCreateSuccess User
 
 
 type MsgOut
     = FormWasSubmitted
-        { email : String
+        { username : String
+        , email : String
         , password : String
         }
-    | LoginWasSuccessfull User
+    | CreateWasSuccessfull User
 
 ```
 
 ## Image
 
-![Login form screenshot](img/LoginForm1.png)
+![Register form screenshot](img/RegisterForm1.png)
 
-## Image, with error message
-
-![Login form screenshot](img/LoginForm2.png)
 
 ## Template
 
