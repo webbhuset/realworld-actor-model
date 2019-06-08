@@ -1,5 +1,7 @@
 # Article List
 
+Used on home page and profile page.
+
 ## Responsibilities
 
 ### Basic
@@ -7,13 +9,24 @@
 - Show a list of articles
 - Username links to user profile page
 - Article title and read more links to article page
+- Tabs to switch feed
+- Extra tabs (for tags) can be added and removed.
+- Pagination
 
 ### Extra
 
+- Transition when tabs are switched.
+
 ## Interfaces
+
+`feed` and `route` are parametric types. This avoids cupling this UI component
+with a specific backend implementation.
+This also simplifies testing.
 
 ```elm
 
+{-| Compile time configuration (dependecy injection)
+-}
 type alias Config route =
     { articleRoute : Slug -> route
     , profileRoute : Username -> route
@@ -37,19 +50,37 @@ type alias Article =
     }
 
 
-type alias Props =
+type alias Labels =
     { readMore : String
     }
 
 
-type MsgIn
-    = Init Props
-    | ShowArticles (List Article)
-    | UpdateArticle Article
+type alias Tab feed =
+    { feed : feed
+    , label : String
+    }
 
 
-type MsgOut
-    = FavoriteClicked Slug
+type MsgIn feed
+    = InitLabels Labels
+    | InitTabs (List (Tab feed))
+    | AppendTab (Tab feed)
+    | GotList
+        { articles : List Article
+        , feed : feed
+        , total : Int
+        , offset : Int
+        }
+    | ArticleWasChanged Article
+
+
+type MsgOut feed
+    = LoadFeed
+        { feed : feed
+        , offset : Int
+        , limit : Int
+        }
+    | FavoriteClicked Slug
     | TagClicked Tag
 
 ```
@@ -58,7 +89,32 @@ type MsgOut
 
 ![Article list screenshot](img/ArticleList1.png)
 
+## Image, tags tab
+
+![Tabs screenshot with extra tab](img/Tabs2.png)
+
+## Image, pagination
+
+![Pagination screenshot](img/Pagination1.png)
+
+
 ## Template
+
+### Tabs
+```html
+<div class="feed-toggle">
+    <ul class="nav nav-pills outline-active">
+        <li class="nav-item">
+            <a class="nav-link disabled" href="">Your Feed</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="">Global Feed</a>
+        </li>
+    </ul>
+</div>
+```
+
+### Article
 
 ```html
 <div class="article-preview">
@@ -78,4 +134,20 @@ type MsgOut
         <span>Read more...</span>
     </a>
 </div>
+```
+
+### Pagination
+
+```html
+<ul class="pagination">
+    <li class="page-item">
+        <a class="page-link" href="">1</a>
+    </li>
+    <li class="page-item active">
+        <a class="page-link" href="">2</a>
+    </li>
+    <li class="page-item">
+        <a class="page-link" href="">3</a>
+    </li>
+</ul>
 ```

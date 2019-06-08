@@ -60,6 +60,14 @@ type alias Comment =
     }
 
 
+type Feed
+    = Global
+    | ByAuthorsImFollowing
+    | FavoritedBy Username
+    | AuthoredBy Username
+    | TaggedWith Tag
+
+
 type MsgIn
     = Session_Observe --> SendSessionEvent
         { replyTo : PID
@@ -86,11 +94,6 @@ type MsgIn
         , image : Maybe String
         , bio : Maybe String
         }
-    | User_Feed --> SendArticleList
-        { replyTo : PID
-        , limit : Int
-        , offset : Int
-        }
     | Profile_Observe --> SendProfileResult
         { replyTo : PID
         , username : String
@@ -103,13 +106,10 @@ type MsgIn
         { replyTo : PID
         , username : String
         }
-    | Article_List --> SendArticleList
-        { replyTo : PID
+    | Feed_Get --> SendFeedResult
+        { feed : Feed
         , limit : Int
         , offset : Int
-        , filter_tag : Maybe Tag
-        , filter_author : Maybe Username
-        , filter_favorited : Maybe Username
         }
     | Article_Observe --> SendArticleResult
         { replyTo : PID
@@ -173,10 +173,12 @@ type MsgOut
         { sendTo : PID
         , user : Result Error Profile
         }
-    | SendArticleList
+    | SendFeedResult
         { sendTo : PID
-        , articles : Result Error (List Article)
+        , feed : Feed
         , total : Int
+        , offset : Int
+        , result : Result Error (List Article)
         }
     | SendArticleResult
         { sendTo : PID
