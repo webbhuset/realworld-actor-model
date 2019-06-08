@@ -148,6 +148,7 @@ type MsgIn
         { replyTo : PID
         , articleSlug : String
         , comment : String
+        , clientId : Int
         }
     | Comment_Delete --> SendCommentResult
         { replyTo : PID
@@ -190,7 +191,13 @@ type MsgOut
     | SendCommentResult
         { sendTo : PID
         , articleSlug : String
-        , comment : Result Error Comment
+        , result : Result Error Comment
+        , clientId : Int
+        }
+    | SendCommentDeleteResult
+        { sendTo : PID
+        , articleSlug : String
+        , result : Result Error Int
         }
     | SendTags
         { sendTo : List PID
