@@ -17,18 +17,12 @@
 type alias Config route =
     { articleRoute : Slug -> route
     , profileRoute : Username -> route
+    , routeToHref : route -> String
     }
 
 
-type Username = Username String
-type Slug = Slug String
-
-
-type alias Author =
-    { username : Username
-    , image : String
-    }
-
+type alias Username = String
+type alias Slug = String
 
 type alias Article =
     { title : String
@@ -38,7 +32,8 @@ type alias Article =
     , slug : Slug
     , favoritesCount : Int
     , favorited : Bool
-    , autor : Author
+    , authorName : Username
+    , authorImage : String
     }
 
 
@@ -61,7 +56,7 @@ type MsgOut
 
 ## Image
 
-![Article list screenshot](ArticleList1.png)
+![Article list screenshot](img/ArticleList1.png)
 
 ## Template
 

@@ -16,11 +16,6 @@
 
 ```elm
 
-type alias Config =
-    { loadTags : Cmd MsgIn
-    }
-
-
 type alias Tag =
     String
 
@@ -38,12 +33,13 @@ type MsgIn
 
 type MsgOut
     = TagClicked String
+    | GiveMeTags
 
 ```
 
 ## Image
 
-![Tag cloud screenshot](Tags1.png)
+![Tag cloud screenshot](img/Tags1.png)
 
 ## Template
 

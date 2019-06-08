@@ -6,6 +6,7 @@
 
 - Render tabs
 - When a tab is clicked, send an out msg with tab id
+- Extra tabs (for tags) can be added and removed.
 
 ### Extra
 
@@ -35,7 +36,9 @@ type MsgOut id
 
 ## Image
 
-![Tabs screenshot](Tabs1.png)
+![Tabs screenshot](img/Tabs1.png)
+
+![Tabs screenshot with extra tab](img/Tabs2.png)
 
 ## Template
 
