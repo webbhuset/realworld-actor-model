@@ -16,6 +16,10 @@ Service actor for the [Conduit API](https://github.com/gothinkster/realworld/tre
 
 ```elm
 
+type SessionEvent
+    = LoggedOut
+    | LoggedIn User
+
 type alias User
     { email : String
     , token : String
@@ -57,7 +61,10 @@ type alias Comment =
 
 
 type MsgIn
-    = User_Login --> SendUserResult
+    = Session_Observe --> SendSessionEvent
+        { replyTo : PID
+        }
+    | User_Login --> SendUserResult
         { replyTo : PID
         , email : String
         , password : String
@@ -68,7 +75,7 @@ type MsgIn
         , email : String
         , password : String
         }
-    | User_Get --> SendUserResult
+    | User_Observe --> SendUserResult
         { replyTo : PID
         }
     | User_Update --> SendUserResult
@@ -84,7 +91,7 @@ type MsgIn
         , limit : Int
         , offset : Int
         }
-    | Profile_Get --> SendProfileResult
+    | Profile_Observe --> SendProfileResult
         { replyTo : PID
         , username : String
         }
@@ -104,7 +111,7 @@ type MsgIn
         , filter_author : Maybe Username
         , filter_favorited : Maybe Username
         }
-    | Article_Get --> SendArticleResult
+    | Article_Observe --> SendArticleResult
         { replyTo : PID
         , slug : Slug
         }
@@ -125,7 +132,7 @@ type MsgIn
         { replyTo : PID
         , slug : String
         }
-    | Article_GetComments --> SendArticleComments
+    | Article_ObserveComments --> SendArticleComments
         { replyTo : PID
         , slug : String
         }
@@ -147,17 +154,21 @@ type MsgIn
         , articleSlug : String
         , commentId : Int
         }
-    | Tags_Get --> SendTags
+    | Tags_Observe --> SendTags
         { replyTo : PID
         }
 
 
 type MsgOut
-    = SendUserResult
+    = SendSessionEvent
+        { sendTo : List PID
+        , event : SessionEvent
+        }
+    | SendUserResult
         { sendTo : PID
         , user : Result Error User
         }
-    = SendProfileResult
+    | SendProfileResult
         { sendTo : PID
         , user : Result Error Profile
         }
@@ -172,7 +183,7 @@ type MsgOut
         , result : Result Error Article
         }
     | SendArticleComments
-        { sendTo : PID
+        { sendTo : List PID
         , articleSlug : String
         , comments : Result Error (List Comment)
         }
@@ -182,7 +193,7 @@ type MsgOut
         , comment : Result Error Comment
         }
     | SendTags
-        { sendTo : PID
+        { sendTo : List PID
         , tags : Result Error List String
         }
 
