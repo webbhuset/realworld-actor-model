@@ -36,13 +36,10 @@ type alias Article =
     }
 
 
-type alias FieldErrors =
-    { title : Maybe String
-    , description : Maybe String
-    , body : Maybe String
-    , tags : Maybe String
+type alias Problem =
+    { key : String
+    , problem : String
     }
-
 
 type MsgIn
     = InitCreate
@@ -53,7 +50,7 @@ type MsgIn
         , articleSlug : Slug
         }
     | RecvArticle Article
-    | RecvError (List ( String, String ))
+    | RecvProblems (List Problem)
     | RecvSuccess Article
 
 
