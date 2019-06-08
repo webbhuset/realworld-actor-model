@@ -2,15 +2,22 @@
 
 ## Responsibilities
 
+### Basic
+
 - Fetch and Render tags
 - When a tag is clicked, send an out msg
+
+### Extra
+
+- When a tag is clicked it should flash to give user feedback.
+- When a loding error occur the component should display a retry button.
 
 ## Interfaces
 
 ```elm
 
 type alias Config =
-    { loadTags : (Result String (List Tag) -> msg) -> Cmd msg
+    { loadTags : Cmd MsgIn
     }
 
 
@@ -25,7 +32,8 @@ type alias Props =
 
 type MsgIn
     = Init Props
-    | RecvTagList (List String)
+    | RecvTagList (List Tag)
+    | RecvError String
 
 
 type MsgOut
