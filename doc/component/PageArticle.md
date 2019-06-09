@@ -2,21 +2,21 @@
 
 ## Responsibilities
 
-- Layout [article view] and [comments] components in two columns
+- Layout [article view] and [comments] components.
 
 ## Interfaces
 
 ```elm
 
 type MsgIn
-    = InitLabels Labels
-    | GotArticle PID
-    | GotComment PID
+    = ShowArticle Slug
+    | GotArticleFor Slug PID
+    | GotCommentFor Slug PID
 
 
 type MsgOut
-    = SpawnArticle
-    | SpawnComments
+    = SpawnArticle Slug
+    | SpawnComments Slug
 
 ```
 
