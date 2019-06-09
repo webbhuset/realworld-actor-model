@@ -17,40 +17,42 @@ Some of the high level features are:
 - Post/edit articles.
 - Comment on articles.
 - Create user accounts.
+- Follow other users.
 - Authentication using JWT.
 
 ## Pages
 
-### Common
+### Home Page
 
-- Home Page
-    - Displays the article feed and a tag cloud where you
-      can filter articles.
-    - Displays a feed of articles posted by users you are following.
+- Displays the article feed and a tag cloud where you
+  can filter articles.
+- Displays a feed of articles posted by users you are following.
 
-- Article View
-    - Lets your read the article and its comments. If you're logged in
-      you can also post comments.
+### Article View
 
-- User Profile
-    - Read info about the user. See their posted articles and who they
-      are following.
+- Lets your read the article and its comments. If you're logged in
+  you can also post comments.
 
-### When logged out
+### User Profile
 
-- Sign In
-    - Login
+- Read info about the user. See their posted articles and who they
+  are following.
 
-- Sign Up
-    - Create an account
+### Sign In
 
-### When logged in
+- Login
 
-- New / Edit Post
-    - Form to create or edit articles.
+### Sign Up
 
-- User Settings
-    - Change your information, email and password etc.
+- Create an account
+
+### New / Edit Post
+
+- Form to create or edit articles.
+
+### User Settings
+
+- Change your information, email and password etc.
 
 
 ## Components
@@ -63,12 +65,14 @@ Services don't have any UI and are used to abstract the backend API.
 
 - [Article Service]
 - [User Service]
+- [Router]
 
 ### Site Layout
 
 General site page layout.
 
 - [Header]
+- [Page Root]
 - [Footer]
 
 ### Article
@@ -158,6 +162,8 @@ Don't add any padding on a component's outermost element.
 [Article Comment View]: component/CommentView.md
 [Tag cloud]: component/Tags.md
 [Header]: component/Header.md
+[Page Root]: component/PageRoot.md
 [Footer]: component/Footer.md
 [Article Service]: component/ArticleService.md
 [User Service]: component/UserService.md
+[Router]: component/Router.md
