@@ -4,13 +4,19 @@ Site footer.
 
 ## Responsibilities
 
+- Render attribution from markdown.
 
 ## Interfaces
 
 ```elm
 
+type alias Labels =
+    { logo : String
+    , attribution : String -- Markdown
+    }
+
 type MsgIn
-    = NoIn
+    = InitLabels Labels
 
 
 type MsgOut

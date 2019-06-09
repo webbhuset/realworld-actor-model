@@ -20,13 +20,13 @@ type alias Tag =
     String
 
 
-type alias Props =
+type alias Labels =
     { title : String
     }
 
 
 type MsgIn
-    = Init Props
+    = InitLabels Labels
     | RecvTagList (List Tag)
     | RecvError String
 

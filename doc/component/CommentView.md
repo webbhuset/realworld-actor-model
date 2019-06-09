@@ -28,8 +28,14 @@ type SessionStatus
     | LoggedIn Username
 
 
+type alias Labels =
+    { postComment : String
+    , writeCommentPlaceholder : String
+    }
+
 type MsgIn
-    = ShowCommentsForArticle Slug
+    = InitLabels Labels
+    | ShowCommentsForArticle Slug
     | RecvSession SessionStatus
     | RecvArticleComments (List Comment)
     | CommentWasCreated

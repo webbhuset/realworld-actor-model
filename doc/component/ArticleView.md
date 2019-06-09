@@ -18,6 +18,15 @@ Comments are not handled by this component. See [CommentView](CommentView.md)
 type alias Slug = String
 type alias Username = String
 
+type alias Labels =
+    { editArticle : String
+    , deleteArticle : String
+    , follow : String
+    , unfollow : String
+    , favoriteArticle : String
+    }
+
+
 type alias Article =
     { title : String
     , slug : Slug
@@ -37,7 +46,8 @@ type SessionStatus
 
 
 type MsgIn
-    = ShowArticle Slug
+    = InitLabels Labels
+    | ShowArticle Slug
     | RecvSession SessionStatus
     | RecvArticle Article
     | RecvError String

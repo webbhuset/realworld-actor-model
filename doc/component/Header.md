@@ -24,8 +24,14 @@ type alias MenuItem route =
     }
 
 
+type alias Labels =
+    { logo : String
+    }
+
+
 type MsgIn route
-    = RouteChanged route
+    = InitLabels Labels
+    | RouteChanged route
     | SetMenuItems (List MenuItem)
 
 

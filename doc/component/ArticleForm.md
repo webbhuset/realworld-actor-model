@@ -42,13 +42,8 @@ type alias Problem =
     }
 
 type MsgIn
-    = InitCreate
-        { labels : Labels
-        }
-    | InitEdit --> ObserveArticle
-        { labels : Labels
-        , articleSlug : Slug
-        }
+    = InitLabels Labels
+    | InitEdit Slug --> ObserveArticle
     | RecvArticle Article
     | RecvProblems (List Problem)
     | RecvSuccess Article
@@ -56,13 +51,13 @@ type MsgIn
 
 type MsgOut
     = ObserveArticle Slug
-    | FormCreateSubmitted
+    | CreateSubmitted
         { title : String
         , description : String
         , body : String
         , tags : List String
         }
-    | FormUpdateSubmitted
+    | UpdateSubmitted
         { slug : Slug
         , title : Maybe String
         , description : Maybe String

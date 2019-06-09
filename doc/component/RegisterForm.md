@@ -20,15 +20,18 @@ type alias User =
     }
 
 
+type alias Labels =
+    { email : String
+    , username : String
+    , password : String
+    , heading : String
+    , haveAnAccount : String
+    , haveAnAccountHref : String
+    , submitButton : String
+    }
+
 type MsgIn
-    = InitLabels
-        { email : String
-        , username : String
-        , password : String
-        , heading : String
-        , haveAnAccount : String
-        , haveAnAccountHref : String
-        }
+    = InitLabels Labels
     | RecvProblems (List Problem)
     | RecvCreateSuccess User
 

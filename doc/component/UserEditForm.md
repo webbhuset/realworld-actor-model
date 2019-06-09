@@ -17,6 +17,7 @@ type alias Problem =
 
 type alias Username = String
 
+
 type alias User =
     { username : Username
     , image : String
@@ -25,16 +26,19 @@ type alias User =
     }
 
 
+type alias Labels =
+    { heading : String
+    , username : String
+    , image : String
+    , bio : String
+    , email : String
+    , password : String
+    , submitButton : String
+    }
+
+
 type MsgIn
-    = InitLabels
-        { heading : String
-        , username : String
-        , image : String
-        , bio : String
-        , email : String
-        , password : String
-        , submit : String
-        }
+    = InitLabels Labels
     | EditUser Username
     | RecvUser User
     | RecvProblems (List Problem)
