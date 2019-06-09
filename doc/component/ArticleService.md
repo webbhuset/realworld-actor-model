@@ -1,12 +1,10 @@
 # API Service
 
-Service actor for the [Conduit API](https://github.com/gothinkster/realworld/tree/master/api).
+Service actor for the [Conduit Article API](https://github.com/gothinkster/realworld/tree/master/api).
 
 ## Responsibilities
 
-- Login / logout
-- Create / update user account
-- Follow / Unfollow other users
+- Load feeds
 - CRUD articles
 - Add, list, delete comments on article
 - Flag / unflag articles as favorite
@@ -15,27 +13,6 @@ Service actor for the [Conduit API](https://github.com/gothinkster/realworld/tre
 ## Interfaces
 
 ```elm
-
-type SessionEvent
-    = LoggedOut
-    | LoggedIn User
-
-type alias User
-    { email : String
-    , token : String
-    , username : String
-    , bio : String
-    , image : String
-    }
-
-
-type alias Profile =
-    { username : String
-    , bio : String
-    , image : String
-    , following : Bool
-    }
-
 
 type alias Article =
     { slug : String
@@ -48,6 +25,14 @@ type alias Article =
     , favorited : Bool
     , favoritesCount : Int
     , author : Profile
+    }
+
+
+type alias Profile =
+    { username : String
+    , bio : String
+    , image : String
+    , following : Bool
     }
 
 
@@ -69,43 +54,7 @@ type Feed
 
 
 type MsgIn
-    = Session_Observe --> SendSessionEvent
-        { replyTo : PID
-        }
-    | User_Login --> SendUserResult
-        { replyTo : PID
-        , email : String
-        , password : String
-        }
-    | User_Create --> SendUserResult
-        { replyTo : PID
-        , username : String
-        , email : String
-        , password : String
-        }
-    | User_Observe --> SendUserResult
-        { replyTo : PID
-        }
-    | User_Update --> SendUserResult
-        { replyTo : PID
-        , email : Maybe String
-        , username : Maybe String
-        , password : Maybe String
-        , image : Maybe String
-        , bio : Maybe String
-        }
-    | Profile_Observe --> SendProfileResult
-        { replyTo : PID
-        , username : String
-        }
-    | Profile_Follow --> SendProfileResult
-        { replyTo : PID
-        , username : String
-        }
-    | Profile_UnFollow --> SendProfileResult
-        { replyTo : PID
-        , username : String
-        }
+    = AuthTokenChanged (Maybe String)
     | Feed_Get --> SendFeedResult
         { feed : Feed
         , limit : Int
@@ -144,13 +93,13 @@ type MsgIn
         { replyTo : PID
         , articleSlug : String
         }
-    | Comment_Create --> SendCommentResult
+    | Comment_Create --> SendCommentCreateResult
         { replyTo : PID
         , articleSlug : String
         , comment : String
-        , clientId : Int
+        , clientId : Int -- Used to keep track of the results.
         }
-    | Comment_Delete --> SendCommentResult
+    | Comment_Delete --> SendCommentDeleteResult
         { replyTo : PID
         , articleSlug : String
         , commentId : Int
@@ -161,18 +110,7 @@ type MsgIn
 
 
 type MsgOut
-    = SendSessionEvent
-        { sendTo : List PID
-        , event : SessionEvent
-        }
-    | SendUserResult
-        { sendTo : PID
-        , user : Result Error User
-        }
-    | SendProfileResult
-        { sendTo : PID
-        , user : Result Error Profile
-        }
+    = ObserveAuthToken
     | SendFeedResult
         { sendTo : PID
         , feed : Feed
@@ -190,11 +128,11 @@ type MsgOut
         , articleSlug : String
         , comments : Result Error (List Comment)
         }
-    | SendCommentResult
+    | SendCommentCreateResult
         { sendTo : PID
         , articleSlug : String
         , result : Result Error Comment
-        , clientId : Int
+        , clientId : Int -- Will be the same value as passed in the Create message
         }
     | SendCommentDeleteResult
         { sendTo : PID
@@ -203,14 +141,20 @@ type MsgOut
         }
     | SendTags
         { sendTo : List PID
-        , tags : Result Error List String
+        , tags : Result Error (List String)
         }
+
+
+type alias Problem =
+    { key : String
+    , problem : String
+    }
 
 
 type Error
     = AuthorizationRequired
     | NotAuthorized
-    | ValidationError (List ( String, String ))
+    | ValidationError (List Problem)
     | NotFound
     | TransportError
 

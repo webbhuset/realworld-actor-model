@@ -4,8 +4,12 @@ Site header.
 
 ## Responsibilities
 
+- Render links
+- Change menu when logged in / logged out
 
 ## Interfaces
+
+Menu items will be set using the session event.
 
 ```elm
 
