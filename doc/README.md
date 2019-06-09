@@ -7,7 +7,7 @@ how to use the actor model for building apps.
 
 ## About Conduit
 
-[Conduit] is a meduim.com clone, a forum application. It lets the users
+[Conduit] is a medium.com clone, a forum application. It lets the users
 post articles, comment on articles, follow other users and flag articles
 as favorite. Articles can be tagged to appear in a tag feed.
 
@@ -20,39 +20,24 @@ Some of the high level features are:
 - Follow other users.
 - Authentication using JWT.
 
-## Pages
+### Pages
 
-### Home Page
-
-- Displays the article feed and a tag cloud where you
-  can filter articles.
-- Displays a feed of articles posted by users you are following.
-
-### Article View
-
-- Lets your read the article and its comments. If you're logged in
-  you can also post comments.
-
-### User Profile
-
-- Read info about the user. See their posted articles and who they
-  are following.
-
-### Sign In
-
-- Login
-
-### Sign Up
-
-- Create an account
-
-### New / Edit Post
-
-- Form to create or edit articles.
-
-### User Settings
-
-- Change your information, email and password etc.
+- **Home Page**
+    - Displays the article feed and a tag cloud where you
+      can filter articles.
+    - Displays a feed of articles posted by users you are following.
+- **Article View**
+    - Lets your read the article and its comments. If you're logged in
+      you can also post comments.
+- **User Profile**
+    - Read info about the user. See their posted articles and who they
+      are following.
+- **Sign In**
+- **Sign up**
+- **New / Edit Post**
+    - Form to create or edit articles.
+- **User Settings**
+    - Change your information, email and password etc.
 
 
 ## Components
@@ -75,20 +60,24 @@ General site page layout.
 - [Page Root]
 - [Footer]
 
-### Article
+### Page layout
 
-- [Create Article Form]
+Some pages are more complex and require their own component.
+
+- [Home Page]
+- [Profile Page]
+- [Article Page]
+
+### Page independant components
+
+- [Article Form]
 - [Article List]
 - [Article View]
 - [Article Comment View]
 - [Tag cloud]
-
-### User
-
 - [Login Form]
 - [Register Form]
 - [User edit form]
-
 
 ## General requirements / best practices
 
@@ -147,6 +136,46 @@ Don't add any padding on a component's outermost element.
 > Letting the parent that is embedding the component control both width and padding
 > gives more flexibility.
 
+### Domain specific data types
+
+To avoid certain mistakes some domain specific data types are defined that
+are used across the whole application code base.
+These types embed scalar values, for example `type Email = Email String`
+
+- Data.Email
+- Data.Slug
+- Data.Username
+- Data.Password
+- Data.Markdown
+
+There are no app-wide record types for data. Each component defines their own records
+for compound data types.
+
+> This avoids cupling. One way to think about it is that a component either consumes /
+> requires data (UI component) or provides data (service component). UI components can
+> also provide data, one example is a form component.
+>
+> Modeling your data this way makes it easy to test and mock data since each component
+> specifies exactly what it needs.
+>
+> Let's say we have an API service component that provieds data for an `Article`. It's
+> a record with 5 fields. You then have a list component that lists articles. It only
+> actually uses two fields, `title` and `slug`, from the record.
+> You define an app-wide record for `Article` with the 5 fields and use it in the
+> list component. You write tests where you mock all 5 fields. All fine so far...
+>
+> Then there is a new requirement somewhere else, some other component that is also
+> using the `Article` record type now needs another field. No problem.
+> The backend is updated, the new field is added to the `Article` record type. Now all
+> tests are broken since you only mock 5 fields but the type has 6 fields. Sure, you can
+> add the 6th field to all 100 tests but this is cumbersome as the number of components
+> grows.
+>
+> - Having a component providing more shouldn't break things.
+> - Having a component requiring less shouldn't break things.
+>
+> Keeping things decupled makes your code more predictable.
+
 
 [SEO]: https://en.wikipedia.org/wiki/Search_engine_optimization
 [realworld]: https://github.com/gothinkster/realworld
@@ -156,7 +185,7 @@ Don't add any padding on a component's outermost element.
 [Login Form]: component/LoginForm.md
 [Register Form]: component/RegisterForm.md
 [User edit form]: component/UserEditForm.md
-[Create Article Form]: component/ArticleForm.md
+[Article Form]: component/ArticleForm.md
 [Article List]: component/ArticleList.md
 [Article View]: component/ArticleView.md
 [Article Comment View]: component/CommentView.md
@@ -167,3 +196,7 @@ Don't add any padding on a component's outermost element.
 [Article Service]: component/ArticleService.md
 [User Service]: component/UserService.md
 [Router]: component/Router.md
+[Home Page]: component/PageHome.md
+[Profile Page]: component/PageProfile.md
+[Article Page]: component/PageArticle.md
+
