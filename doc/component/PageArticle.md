@@ -1,5 +1,9 @@
 # Article Page Layout
 
+The [page root] component only accepts one PID for
+the content. This component builds the article page
+by combining the [article view] and [comments] component.
+
 ## Responsibilities
 
 - Layout [article view] and [comments] components.
@@ -27,3 +31,4 @@ type MsgOut
 
 [article view]: ArticleView.md
 [comments]: CommentView.md
+[page root]: PageRoot.md

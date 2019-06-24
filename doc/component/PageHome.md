@@ -1,5 +1,9 @@
 # Home Page Layout
 
+The [page root] component only accepts one PID for
+the content. This component builds the home page
+by combining the [feed] and [tag] component.
+
 ## Responsibilities
 
 - Render green "conduit" hero
@@ -34,3 +38,4 @@ type MsgOut
 
 [feed]: ArticleList.md
 [tag]: Tags.md
+[page root]: PageRoot.md

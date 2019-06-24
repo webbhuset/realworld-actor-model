@@ -1,6 +1,8 @@
 # Page Layout
 
-Site page layout.
+This is the page root component. It takes care of
+spawning each page component when the route (url) is
+changed.
 
 ## Responsibilities
 
@@ -38,6 +40,5 @@ type MsgOut route
     | SpawnHeader
     | SpawnFooter
     | Kill PID
-
 ```
 

@@ -1,5 +1,9 @@
 # Profile Page Layout
 
+The [page root] component only accepts one PID for
+the content. This component builds the profile page
+by using the [feed] component and rendering the hero.
+
 ## Responsibilities
 
 - Render profile hero
@@ -35,3 +39,4 @@ type MsgOut
 
 
 [feed]: ArticleList.md
+[page root]: PageRoot.md
