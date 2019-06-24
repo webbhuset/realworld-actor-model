@@ -1,10 +1,7 @@
-module Component.UI.LoginForm exposing
+module Component.UI.ArticleForm exposing
     ( MsgIn(..)
     , MsgOut(..)
     , Model
-    , Problem
-    , User
-    , Labels
     , component
     )
 
@@ -12,9 +9,27 @@ import Html exposing (Html)
 import Html.Attributes as HA
 import Webbhuset.Component as Component exposing (PID)
 import Webbhuset.Component.SystemEvent as SystemEvent exposing (SystemEvent)
-import Data.Profile.Username exposing (Username)
-import Data.Profile.Email exposing (Email)
-import Data.Profile.Password exposing (Password)
+import Data.Article.Slug exposing (Slug)
+import Data.Article.Tag exposing (Tag)
+import Data.Markdown exposing (Markdown)
+
+
+type alias Labels =
+    { title : String
+    , description : String
+    , body : String
+    , tags : String
+    , submitButton : String
+    }
+
+
+type alias Article =
+    { slug : Slug
+    , title : String
+    , description : String
+    , body : Markdown
+    , tags : List Tag
+    }
 
 
 type alias Problem =
@@ -23,33 +38,31 @@ type alias Problem =
     }
 
 
-type alias User =
-    { username : Username
-    }
-
-
-type alias Labels =
-    { email : String
-    , password : String
-    , heading : String
-    , needAnAccount : String
-    , needAnAccountHref : String
-    , submitButton : String
-    }
-
-
 type MsgIn
     = GotLabels Labels
+    | InitEdit Slug --> GiveMeArticleData
+    | GotArticle Article
     | GotProblems (List Problem)
-    | GotLoginSuccess User
+    | GotSuccess Article
 
 
 type MsgOut
-    = FormWasSubmitted
-        { email : Email
-        , password : Password
+    = GiveMeArticleData Slug
+    | CreateSubmitted
+        { title : String
+        , description : String
+        , body : Markdown
+        , tags : List Tag
         }
-    | LoginWasSuccessfull User
+    | UpdateSubmitted
+        { slug : Slug
+        , title : Maybe String
+        , description : Maybe String
+        , body : Maybe Markdown
+        , tags : Maybe (List Tag)
+        }
+    | CreateSuccess Slug
+    | EditSuccess Slug
 
 
 type alias Model =
@@ -108,5 +121,5 @@ view : Model -> Html MsgIn
 view model =
     Html.div
         []
-        [ Html.text "Login Form Component"
+        [ Html.text "Article Form Component"
         ]

@@ -1,6 +1,8 @@
 # Article Form
 
-For for publishing a new article or edit an existing.
+Form for publishing a new article or edit an existing.
+Sends messages to the [article service] actor when
+form is submitted.
 
 ## Responsibilities
 
@@ -17,6 +19,10 @@ For for publishing a new article or edit an existing.
 
 ```elm
 
+import Data.Article.Slug exposing (Slug)
+import Data.Article.Tag exposing (Tag)
+import Data.Markdown exposing (Markdown)
+
 
 type alias Labels =
     { title : String
@@ -28,11 +34,11 @@ type alias Labels =
 
 
 type alias Article =
-    { slug : String
+    { slug : Slug
     , title : String
     , description : String
-    , body : String
-    , tags : List String
+    , body : Markdown
+    , tags : List Tag
     }
 
 
@@ -41,28 +47,29 @@ type alias Problem =
     , problem : String
     }
 
+
 type MsgIn
-    = InitLabels Labels
-    | InitEdit Slug --> ObserveArticle
-    | RecvArticle Article
-    | RecvProblems (List Problem)
-    | RecvSuccess Article
+    = GotLabels Labels
+    | InitEdit Slug --> GiveMeArticleData
+    | GotArticle Article
+    | GotProblems (List Problem)
+    | GotSuccess Article
 
 
 type MsgOut
-    = ObserveArticle Slug
+    = GiveMeArticleData Slug
     | CreateSubmitted
         { title : String
         , description : String
-        , body : String
-        , tags : List String
+        , body : Markdown
+        , tags : List Tag
         }
     | UpdateSubmitted
         { slug : Slug
         , title : Maybe String
         , description : Maybe String
-        , body : Maybe String
-        , tags : Maybe (List String)
+        , body : Maybe Markdown
+        , tags : Maybe (List Tag)
         }
     | CreateSuccess Slug
     | EditSuccess Slug
@@ -110,3 +117,5 @@ With error messages
   </div>
 </div>
 ```
+
+[article service]: ArticleService.md
