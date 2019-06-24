@@ -156,7 +156,7 @@ type alias Problem =
 
 
 type Error
-    = AuthorizationRequired
+    = AuthenticationRequired
     | NotAuthorized
     | ValidationError (List Problem)
     | NotFound

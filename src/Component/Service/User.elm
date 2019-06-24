@@ -1,20 +1,25 @@
-# User Service
+module Component.Service.User exposing
+    ( MsgIn(..)
+    , MsgOut(..)
+    , Model
+    , SessionEvent(..)
+    , User
+    , Profile
+    , Problem
+    , Error(..)
+    , component
+    )
 
-Service actor for the [Conduit User API](https://github.com/gothinkster/realworld/tree/master/api).
-Other actors can observe the login/logout session event.
+{-|
 
-## Responsibilities
+@docs MsgIn
+@docs MsgOut
 
-- Login / logout
-- Create / update user account
-- Follow / Unfollow other users
-- Dispatch session events.
-- Send errors
+@docs component, Model
+-}
 
-## Interfaces
-
-```elm
-
+import Webbhuset.Component as Component exposing (PID)
+import Webbhuset.Component.SystemEvent as SystemEvent exposing (SystemEvent)
 import Data.Profile.Username exposing (Username)
 import Data.Profile.Email exposing (Email)
 import Data.Profile.Password exposing (Password)
@@ -112,5 +117,59 @@ type Error
     | NotFound
     | TransportError
 
-```
+
+
+{-| Component Model.
+-}
+
+type alias Model =
+    { pid : PID
+    }
+
+
+initModel : PID -> Model
+initModel pid =
+    { pid = pid
+    }
+
+
+{-| Component Record
+-}
+component : Component.Service Model MsgIn MsgOut
+component =
+    { init = init
+    , update = update
+    , onSystem = onSystem
+    , subs = subs
+    }
+
+
+init : PID -> ( Model , List MsgOut, Cmd MsgIn )
+init pid =
+    ( initModel pid
+    , []
+    , Cmd.none
+    )
+
+
+onSystem : SystemEvent -> SystemEvent.Handling MsgIn
+onSystem event =
+    SystemEvent.default
+
+
+subs : Model -> Sub MsgIn
+subs model =
+    Sub.none
+
+
+update : MsgIn -> Model -> ( Model, List MsgOut, Cmd MsgIn )
+update msgIn model =
+    case msgIn of
+        _ ->
+            ( model
+            , []
+            , Cmd.none
+            )
+
+
 
