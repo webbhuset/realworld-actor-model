@@ -1,5 +1,9 @@
 # Login Form
 
+A login form component. Sends email/password to the
+[user service] component when the form is submitted.
+
+
 ## Responsibilities
 
 - Render login form inputs
@@ -9,6 +13,11 @@
 
 ```elm
 
+import Data.Profile.Username exposing (Username)
+import Data.Profile.Email exposing (Email)
+import Data.Profile.Password exposing (Password)
+
+
 type alias Problem =
     { key : String
     , problem : String
@@ -16,7 +25,7 @@ type alias Problem =
 
 
 type alias User =
-    { username : String
+    { username : Username
     }
 
 
@@ -31,15 +40,15 @@ type alias Labels =
 
 
 type MsgIn
-    = InitLabels Labels
-    | RecvProblems (List Problem)
-    | RecvLoginSuccess User
+    = GotLabels Labels
+    | GotProblems (List Problem)
+    | GotLoginSuccess User
 
 
 type MsgOut
     = FormWasSubmitted
-        { email : String
-        , password : String
+        { email : Email
+        , password : Password
         }
     | LoginWasSuccessfull User
 
@@ -82,3 +91,5 @@ type MsgOut
 </div>
 
 ```
+
+[user service]: UserService.md
