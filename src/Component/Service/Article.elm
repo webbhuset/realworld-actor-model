@@ -1,21 +1,33 @@
-# API Service
+module Component.Service.Article exposing
+    ( MsgIn(..)
+    , MsgOut(..)
+    , Model
+    , Article
+    , Profile
+    , Comment
+    , Feed(..)
+    , Problem
+    , Error(..)
+    , component
+    )
 
-Service actor for the [Conduit Article API](https://github.com/gothinkster/realworld/tree/master/api).
-Some parts of the API requires an auth token, this is
-provided by the [user service] component.
+{-|
+
+@docs MsgIn
+@docs MsgOut
+
+@docs component, Model
+-}
+
+import Webbhuset.Component as Component exposing (PID)
+import Webbhuset.Component.SystemEvent as SystemEvent exposing (SystemEvent)
+import Time
+import Data.Article.Slug exposing (Slug)
+import Data.Article.Tag exposing (Tag)
+import Data.Profile.Username exposing (Username)
+import Data.AuthToken exposing (AuthToken)
 
 
-## Responsibilities
-
-- Load feeds
-- Create, Read, Update, Delete (CRUD) articles.
-- Add, list, delete comments on articles.
-- Flag / unflag articles as favorite.
-- List tags
-
-## Interfaces
-
-```elm
 
 type alias Article =
     { slug : Slug
@@ -114,7 +126,7 @@ type MsgIn
 
 
 type MsgOut
-    = ObserveAuthToken --> Expects GotAuthToken
+    = ObserveAuthToken
     | SendFeedResult
         { sendTo : PID
         , feed : Feed
@@ -162,6 +174,59 @@ type Error
     | NotFound
     | TransportError
 
-```
 
-[user service]: UserService.md
+
+{-| Component Model.
+-}
+
+type alias Model =
+    { pid : PID
+    }
+
+
+initModel : PID -> Model
+initModel pid =
+    { pid = pid
+    }
+
+
+{-| Component Record
+-}
+component : Component.Service Model MsgIn MsgOut
+component =
+    { init = init
+    , update = update
+    , onSystem = onSystem
+    , subs = subs
+    }
+
+
+init : PID -> ( Model , List MsgOut, Cmd MsgIn )
+init pid =
+    ( initModel pid
+    , []
+    , Cmd.none
+    )
+
+
+onSystem : SystemEvent -> SystemEvent.Handling MsgIn
+onSystem event =
+    SystemEvent.default
+
+
+subs : Model -> Sub MsgIn
+subs model =
+    Sub.none
+
+
+update : MsgIn -> Model -> ( Model, List MsgOut, Cmd MsgIn )
+update msgIn model =
+    case msgIn of
+        _ ->
+            ( model
+            , []
+            , Cmd.none
+            )
+
+
+

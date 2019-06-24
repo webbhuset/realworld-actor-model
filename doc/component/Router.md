@@ -1,11 +1,14 @@
 # Router Service
 
-Parse Url
+The router parses URLs to internal Routes
+and sends them to other processes observing the
+the route event.
 
 ## Responsibilities
 
 - Parse URL
-- Send RouteWasChanged events
+- Send Route events
+- Perform `push` and `load` to browser navigation.
 
 ## Interfaces
 
@@ -25,15 +28,17 @@ type Route
 
 
 type MsgIn
-    = UrlChanged Url
-    | ObserveRoute
+    = GotUrl Url --> SendRoute
+    | GotKey Nav.Key
+    | ObserveRouteChanges --> SendRoute
         { replyTo : PID
         }
+    | PushHref Href
+    | LoadHref Href
 
 
 type MsgOut
-    = ObserveUrlChanges
-    | RouteWasChanged
+    = SendRoute
         { sendTo : PID
         , route : Route
         }
