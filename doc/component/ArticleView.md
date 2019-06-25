@@ -15,8 +15,10 @@ Comments are not handled by this component. See [CommentView](CommentView.md)
 
 ```elm
 
-type alias Slug = String
-type alias Username = String
+import Data.Article.Slug exposing (Slug)
+import Data.Markdown exposing (Markdown)
+import Data.Profile.Username exposing (Username)
+import Time
 
 type alias Labels =
     { editArticle : String
@@ -30,7 +32,7 @@ type alias Labels =
 type alias Article =
     { title : String
     , slug : Slug
-    , body : String
+    , body : Markdown
     , createdAt : Time.Posix
     , favoriteCount : Int
     , isFavorited : Bool
@@ -46,11 +48,11 @@ type SessionStatus
 
 
 type MsgIn
-    = InitLabels Labels
+    = GotLabels Labels
     | ShowArticle Slug
-    | RecvSession SessionStatus
-    | RecvArticle Article
-    | RecvError String
+    | GotSession SessionStatus
+    | GotArticle Article
+    | GotError String
 
 
 type MsgOut

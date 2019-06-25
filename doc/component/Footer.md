@@ -10,13 +10,15 @@ Site footer.
 
 ```elm
 
+import Data.Markdown exposing (Markdown)
+
 type alias Labels =
     { logo : String
-    , attribution : String -- Markdown
+    , attribution : Markdown
     }
 
 type MsgIn
-    = InitLabels Labels
+    = GotLabels Labels
 
 
 type MsgOut
