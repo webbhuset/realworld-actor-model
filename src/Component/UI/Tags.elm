@@ -7,9 +7,10 @@ module Component.UI.Tags exposing
 
 import Html exposing (Html)
 import Html.Attributes as HA
+import Html.Events as Events
 import Webbhuset.Component as Component exposing (PID)
 import Webbhuset.Component.SystemEvent as SystemEvent exposing (SystemEvent)
-import Data.Article.Tag exposing (Tag)
+import Data.Article.Tag exposing (Tag(..))
 
 
 type alias Labels =
@@ -21,6 +22,7 @@ type MsgIn
     = GotLabels Labels
     | GotTags (List Tag)
     | GotError String
+    | TagButtonClicked String
 
 
 type MsgOut
@@ -30,12 +32,16 @@ type MsgOut
 
 type alias Model =
     { pid : PID
+    , errorMsg : Maybe String
+    , tags : List Tag
     }
 
 
 initModel : PID -> Model
 initModel pid =
     { pid = pid
+    , errorMsg = Nothing
+    , tags = []
     }
 
 --
@@ -55,7 +61,8 @@ component =
 init : PID -> ( Model , List MsgOut, Cmd MsgIn )
 init pid =
     ( initModel pid
-    , []
+    , [ GiveMeTags
+      ]
     , Cmd.none
     )
 
@@ -73,6 +80,25 @@ subs model =
 update : MsgIn -> Model -> ( Model, List MsgOut, Cmd MsgIn )
 update msgIn model =
     case msgIn of
+        GotError errorMsg ->
+            ( { model | errorMsg = Just errorMsg }
+            , []
+            , Cmd.none
+            )
+
+        GotTags tags ->
+            ( { model | tags = tags }
+            , []
+            , Cmd.none
+            )
+
+        TagButtonClicked tag ->
+            ( model
+            , [ TagClicked (Tag tag)
+              ]
+            , Cmd.none
+            )
+
         _ ->
             ( model
             , []
@@ -84,5 +110,29 @@ view : Model -> Html MsgIn
 view model =
     Html.div
         []
-        [ Html.text "Tags Component"
+        [ case model.errorMsg of
+            Just errorMsg ->
+                Html.div
+                    [ HA.style "color" "red"
+                    ]
+                    [ Html.text errorMsg
+                    ]
+
+            Nothing ->
+                model.tags
+                    |> List.map
+                        (\(Tag tag) ->
+                            Html.span
+                                [ HA.style "display" "inline-block"
+                                , HA.style "background" "#eee"
+                                , HA.style "border-radius" "16px"
+                                , HA.style "border" "solid 1px black"
+                                , HA.style "padding" "3px 16px"
+                                , HA.style "cursor" "pointer"
+                                , Events.onClick (TagButtonClicked tag)
+                                ]
+                                [ Html.text tag
+                                ]
+                        )
+                    |> Html.div []
         ]

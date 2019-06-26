@@ -22,6 +22,7 @@ main =
             [ test_tags
             , test_error
             , test_tagClicked
+            , test_longTags
             ]
         , stringifyMsgIn = Debug.toString
         , stringifyMsgOut = Debug.toString
@@ -43,6 +44,7 @@ css =
     """
 .component {
     font-family: sans-serif;
+    background: white;
 }
 """
 
@@ -102,6 +104,33 @@ Click the `click me` tag to pass the test.
     """
     , init =
         [ [ "not me", "click me", "don't click me" ]
+            |> List.map Tag
+            |> Tags.GotTags
+            |> Sandbox.sendMsg
+        ]
+    , onMsgOut = \msgOut ->
+        case msgOut of
+            Tags.TagClicked tag ->
+                [ if tag == (Tag "click me") then
+                    Sandbox.pass
+                  else
+                    Sandbox.fail "Wrong tag clicked"
+                ]
+
+            _ ->
+                []
+    }
+
+
+test_longTags : Sandbox.TestCase MsgIn MsgOut
+test_longTags =
+    { title = "Long Tag names"
+    , desc =
+    """
+Click the `click me` tag to pass the test.
+    """
+    , init =
+        [ [ "not me asdf lorem asdf asldkfj alskdfj alksdjf alksdjf alskdfj alksdjf alksdjf alksdjf alksdfj lkadjf", "click me", "don't click me" ]
             |> List.map Tag
             |> Tags.GotTags
             |> Sandbox.sendMsg
