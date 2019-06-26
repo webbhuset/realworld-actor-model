@@ -29,12 +29,14 @@ main =
         , wrapView = view
         }
 
+
 view : Html MsgIn -> Html MsgIn
 view componentHtml =
     Html.div
         [ HA.class "component"
         ]
         [ Html.node "style" [] [ Html.text css ]
+        --, Html.node "link" [ HA.rel "stylesheet" , HA.href "//demo.productionready.io/main.css" ] []
         , componentHtml
         ]
 
@@ -44,7 +46,39 @@ css =
     """
 .component {
     font-family: sans-serif;
+    padding: 1rem;
     background: white;
+}
+.tags {
+    background: #eee;
+    padding: 8px;
+}
+.tags p {
+    margin: 0;
+}
+.tags .error {
+    margin-top: 0.5rem;
+    color: red;
+}
+.tag-list {
+    margin-top: 0.5rem;
+}
+.tag-pill {
+    padding-right: 0.6em;
+    padding-left: 0.6em;
+    border-radius: 10rem;
+}
+.tag-default {
+    background: #818a91;
+    color: #fff !important;
+    font-size: 0.8rem;
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
+    white-space: nowrap;
+    margin-right: 3px;
+    margin-bottom: 0.2rem;
+    display: inline-block;
+    cursor: pointer;
 }
 """
 
@@ -127,23 +161,19 @@ test_longTags =
     { title = "Long Tag names"
     , desc =
     """
-Click the `click me` tag to pass the test.
+Tags should not overflow.
     """
     , init =
-        [ [ "not me asdf lorem asdf asldkfj alskdfj alksdjf alksdjf alskdfj alksdjf alksdjf alksdjf alksdfj lkadjf", "click me", "don't click me" ]
+        [ [ "not me asdf lorem asdf asldkfj alskdfj alksdjf alksdjf alskdfj alksdjf alksdjf alksdjf alksdfj lkadjf"
+          , "other tag"
+          , "tag"
+          ]
             |> List.map Tag
             |> Tags.GotTags
             |> Sandbox.sendMsg
         ]
     , onMsgOut = \msgOut ->
         case msgOut of
-            Tags.TagClicked tag ->
-                [ if tag == (Tag "click me") then
-                    Sandbox.pass
-                  else
-                    Sandbox.fail "Wrong tag clicked"
-                ]
-
             _ ->
                 []
     }

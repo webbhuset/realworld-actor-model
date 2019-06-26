@@ -22,7 +22,11 @@ type MsgIn
     = GotLabels Labels
     | GotTags (List Tag)
     | GotError String
-    | TagButtonClicked String
+    | Internal InternalMsg
+
+
+type InternalMsg
+    = TagButtonClicked String
 
 
 type MsgOut
@@ -34,6 +38,7 @@ type alias Model =
     { pid : PID
     , errorMsg : Maybe String
     , tags : List Tag
+    , labels : Labels
     }
 
 
@@ -42,6 +47,9 @@ initModel pid =
     { pid = pid
     , errorMsg = Nothing
     , tags = []
+    , labels =
+        { title = "Popular Tags"
+        }
     }
 
 --
@@ -92,7 +100,7 @@ update msgIn model =
             , Cmd.none
             )
 
-        TagButtonClicked tag ->
+        Internal (TagButtonClicked tag) ->
             ( model
             , [ TagClicked (Tag tag)
               ]
@@ -109,11 +117,13 @@ update msgIn model =
 view : Model -> Html MsgIn
 view model =
     Html.div
-        []
-        [ case model.errorMsg of
+        [ HA.class "tags"
+        ]
+        [ Html.p [ ] [ Html.text model.labels.title ]
+        , case model.errorMsg of
             Just errorMsg ->
                 Html.div
-                    [ HA.style "color" "red"
+                    [ HA.class "error"
                     ]
                     [ Html.text errorMsg
                     ]
@@ -122,17 +132,16 @@ view model =
                 model.tags
                     |> List.map
                         (\(Tag tag) ->
-                            Html.span
-                                [ HA.style "display" "inline-block"
-                                , HA.style "background" "#eee"
-                                , HA.style "border-radius" "16px"
-                                , HA.style "border" "solid 1px black"
-                                , HA.style "padding" "3px 16px"
-                                , HA.style "cursor" "pointer"
-                                , Events.onClick (TagButtonClicked tag)
+                            Html.a
+                                [ HA.class "tag-pill tag-default"
+                                , TagButtonClicked tag
+                                    |> Internal
+                                    |> Events.onClick
                                 ]
                                 [ Html.text tag
                                 ]
                         )
-                    |> Html.div []
+                    |> Html.div
+                        [ HA.class "tag-list"
+                        ]
         ]
