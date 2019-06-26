@@ -9,6 +9,11 @@
 
 ```elm
 
+import Data.Profile.Email exposing (Email)
+import Data.Profile.Username exposing (Username)
+import Data.Profile.Password exposing (Password)
+
+
 type alias Problem =
     { key : String
     , problem : String
@@ -16,7 +21,7 @@ type alias Problem =
 
 
 type alias User =
-    { username : String
+    { username : Username
     }
 
 
@@ -31,16 +36,16 @@ type alias Labels =
     }
 
 type MsgIn
-    = InitLabels Labels
-    | RecvProblems (List Problem)
-    | RecvCreateSuccess User
+    = GotLabels Labels
+    | GotProblems (List Problem)
+    | GotCreateSuccess User
 
 
 type MsgOut
     = FormWasSubmitted
-        { username : String
-        , email : String
-        , password : String
+        { username : Username
+        , email : Email
+        , password : Password
         }
     | CreateWasSuccessfull User
 

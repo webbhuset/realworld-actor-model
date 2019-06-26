@@ -25,23 +25,26 @@ This also simplifies testing.
 
 ```elm
 
+import Time
+import Data.Article.Tag exposing (Tag)
+import Data.Article.Slug exposing (Slug)
+import Data.Profile.Username exposing (Username)
+import Data.Href exposing (Href)
+
+
 {-| Compile time configuration (dependecy injection)
 -}
-type alias Config route =
-    { articleRoute : Slug -> route
-    , profileRoute : Username -> route
-    , routeToHref : route -> String
+type alias Config =
+    { articleHref : Slug -> Href
+    , profileHref : Username -> Href
     }
 
-
-type alias Username = String
-type alias Slug = String
 
 type alias Article =
     { title : String
     , description : String
     , createAt : Time.Posix
-    , tags : List String
+    , tags : List Tag
     , slug : Slug
     , favoritesCount : Int
     , favorited : Bool
@@ -62,8 +65,8 @@ type alias Tab feed =
 
 
 type MsgIn feed
-    = InitLabels Labels
-    | InitTabs (List (Tab feed))
+    = GotLabels Labels
+    | GotTabs (List (Tab feed))
     | AppendTab (Tab feed)
     | GotList
         { articles : List Article
@@ -75,7 +78,7 @@ type MsgIn feed
 
 
 type MsgOut feed
-    = LoadFeed
+    = GiveMeFeedArticles
         { feed : feed
         , offset : Int
         , limit : Int

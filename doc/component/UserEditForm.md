@@ -9,20 +9,22 @@
 
 ```elm
 
+import Data.Profile.Email exposing (Email)
+import Data.Profile.Username exposing (Username)
+import Data.Profile.Password exposing (Password)
+
+
 type alias Problem =
     { key : String
     , problem : String
     }
 
 
-type alias Username = String
-
-
 type alias User =
     { username : Username
     , image : String
     , bio : String
-    , email : String
+    , email : Email
     }
 
 
@@ -38,21 +40,21 @@ type alias Labels =
 
 
 type MsgIn
-    = InitLabels Labels
+    = GotLabels Labels
     | EditUser Username
-    | RecvUser User
-    | RecvProblems (List Problem)
-    | RecvSuccess User
+    | GotUser User
+    | GotProblems (List Problem)
+    | GotSuccess User
 
 
 type MsgOut
     = ObserveUser Username
     | FormWasSubmitted
-        { username : Maybe String
+        { username : Maybe Username
         , image : Maybe String
         , bio : Maybe String
-        , email : Maybe String
-        , password : Maybe String
+        , email : Maybe Email
+        , password : Maybe Password
         }
     | SaveWasSuccessfull User
 

@@ -13,7 +13,10 @@ by using the [feed] component and rendering the hero.
 
 ```elm
 
-type alias Profile
+import Data.Profile.Username exposing (Username)
+
+
+type alias Profile =
     { image : String
     , name : String
     , bio : String
@@ -23,7 +26,7 @@ type alias Profile
 type MsgIn
     = ShowProfile Username
     | GotProfile Profile
-    | GotFeed PID
+    | GotFeedProcess PID
 
 
 type MsgOut

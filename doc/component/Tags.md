@@ -1,11 +1,14 @@
 # Tags
 
+A "tag cloud" component.
+
 ## Responsibilities
 
 ### Basic
 
-- Fetch and Render tags
+- Render tags
 - When a tag is clicked, send an out msg
+- Display an error message if something went wrong.
 
 ### Extra
 
@@ -16,8 +19,7 @@
 
 ```elm
 
-type alias Tag =
-    String
+import Data.Article.Tag exposing (Tag)
 
 
 type alias Labels =
@@ -26,13 +28,13 @@ type alias Labels =
 
 
 type MsgIn
-    = InitLabels Labels
-    | RecvTagList (List Tag)
-    | RecvError String
+    = GotLabels Labels
+    | GotTags (List Tag)
+    | GotError String
 
 
 type MsgOut
-    = TagClicked String
+    = TagClicked Tag
     | GiveMeTags
 
 ```

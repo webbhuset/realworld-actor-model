@@ -1,13 +1,16 @@
 # API Service
 
 Service actor for the [Conduit Article API](https://github.com/gothinkster/realworld/tree/master/api).
+Some parts of the API requires an auth token, this is
+provided by the [user service] component.
+
 
 ## Responsibilities
 
 - Load feeds
-- CRUD articles
-- Add, list, delete comments on article
-- Flag / unflag articles as favorite
+- Create, Read, Update, Delete (CRUD) articles.
+- Add, list, delete comments on articles.
+- Flag / unflag articles as favorite.
 - List tags
 
 ## Interfaces
@@ -15,7 +18,7 @@ Service actor for the [Conduit Article API](https://github.com/gothinkster/realw
 ```elm
 
 type alias Article =
-    { slug : String
+    { slug : Slug
     , title : String
     , description : String
     , body : String
@@ -29,7 +32,7 @@ type alias Article =
 
 
 type alias Profile =
-    { username : String
+    { username : Username
     , bio : String
     , image : String
     , following : Bool
@@ -54,13 +57,14 @@ type Feed
 
 
 type MsgIn
-    = AuthTokenChanged (Maybe String)
+    = GotAuthToken (Maybe AuthToken)
     | Feed_Get --> SendFeedResult
-        { feed : Feed
+        { replyTo : PID
+        , feed : Feed
         , limit : Int
         , offset : Int
         }
-    | Article_Observe --> SendArticleResult
+    | Article_Get --> SendArticleResult
         { replyTo : PID
         , slug : Slug
         }
@@ -69,7 +73,7 @@ type MsgIn
         , title : String
         , description : String
         , body : String
-        , tagList : List String
+        , tagList : List Tag
         }
     | Article_Update --> SendArticleResult
         { replyTo : PID
@@ -79,29 +83,29 @@ type MsgIn
         }
     | Article_Delete --> SendArticleResult
         { replyTo : PID
-        , slug : String
+        , slug : Slug
         }
     | Article_ObserveComments --> SendArticleComments
         { replyTo : PID
-        , slug : String
+        , slug : Slug
         }
     | Article_Favorite --> SendArticleResult
         { replyTo : PID
-        , articleSlug : String
+        , slug : Slug
         }
     | Article_UnFavorite --> SendArticleResult
         { replyTo : PID
-        , articleSlug : String
+        , slug : Slug
         }
     | Comment_Create --> SendCommentCreateResult
         { replyTo : PID
-        , articleSlug : String
+        , slug : Slug
         , comment : String
         , clientId : Int -- Used to keep track of the results.
         }
     | Comment_Delete --> SendCommentDeleteResult
         { replyTo : PID
-        , articleSlug : String
+        , slug : Slug
         , commentId : Int
         }
     | Tags_Observe --> SendTags
@@ -110,7 +114,7 @@ type MsgIn
 
 
 type MsgOut
-    = ObserveAuthToken
+    = ObserveAuthToken --> Expects GotAuthToken
     | SendFeedResult
         { sendTo : PID
         , feed : Feed
@@ -120,28 +124,28 @@ type MsgOut
         }
     | SendArticleResult
         { sendTo : PID
-        , articleSlug : String
+        , slug : Slug
         , result : Result Error Article
         }
     | SendArticleComments
         { sendTo : List PID
-        , articleSlug : String
+        , slug : Slug
         , comments : Result Error (List Comment)
         }
     | SendCommentCreateResult
         { sendTo : PID
-        , articleSlug : String
+        , slug : Slug
         , result : Result Error Comment
         , clientId : Int -- Will be the same value as passed in the Create message
         }
     | SendCommentDeleteResult
         { sendTo : PID
-        , articleSlug : String
+        , slug : Slug
         , result : Result Error Int
         }
     | SendTags
         { sendTo : List PID
-        , tags : Result Error (List String)
+        , tags : Result Error (List Tag)
         }
 
 
@@ -152,7 +156,7 @@ type alias Problem =
 
 
 type Error
-    = AuthorizationRequired
+    = AuthenticationRequired
     | NotAuthorized
     | ValidationError (List Problem)
     | NotFound
@@ -160,3 +164,4 @@ type Error
 
 ```
 
+[user service]: UserService.md

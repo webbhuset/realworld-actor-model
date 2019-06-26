@@ -12,15 +12,17 @@ by combining the [article view] and [comments] component.
 
 ```elm
 
+import Data.Article.Slug exposing (Slug)
+
 type MsgIn
     = ShowArticle Slug
-    | GotArticleFor Slug PID
-    | GotCommentFor Slug PID
+    | GotArticleProcess Slug PID
+    | GotCommentProcess Slug PID
 
 
 type MsgOut
-    = SpawnArticle Slug
-    | SpawnComments Slug
+    = SpawnArticle Slug --> Expects GotArticleProcess
+    | SpawnComments Slug --> Expects GotCommentProcess
 
 ```
 

@@ -13,8 +13,12 @@ Menu items will be set using the session event.
 
 ```elm
 
+import Data.Href exposing (Href)
+import Data.Profile.Username exposing (Username)
+
+
 type alias Config route =
-    { routeToHref : route -> String
+    { routeToHref : route -> Href
     }
 
 
@@ -29,10 +33,17 @@ type alias Labels =
     }
 
 
+type alias User =
+    { username : Username
+    , avatarUrl : String
+    }
+
+
 type MsgIn route
-    = InitLabels Labels
-    | RouteChanged route
-    | SetMenuItems (List MenuItem)
+    = GotLabels Labels
+    | GotRoute route
+    | SetMenuItems (List (MenuItem route))
+    | GotSession (Maybe User)
 
 
 type MsgOut

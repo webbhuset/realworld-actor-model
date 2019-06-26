@@ -10,8 +10,10 @@
 
 ```elm
 
-type alias Slug = String
-type alias Username = String
+import Data.Article.Slug exposing (Slug)
+import Data.Profile.Username exposing (Username)
+import Time
+
 
 type alias Comment =
     { id : Int
@@ -31,13 +33,15 @@ type SessionStatus
 type alias Labels =
     { postComment : String
     , writeCommentPlaceholder : String
+    , notLoggedInMessage : String
     }
 
+
 type MsgIn
-    = InitLabels Labels
+    = GotLabels Labels
     | ShowCommentsForArticle Slug
-    | RecvSession SessionStatus
-    | RecvArticleComments (List Comment)
+    | GotSession SessionStatus
+    | GotComments (List Comment)
     | CommentWasCreated
         { clientId : Int
         , comment : Comment
@@ -53,7 +57,7 @@ type MsgIn
         { commentId : Int
         , error : String
         }
-    | RecvError String
+    | GotError String
 
 
 type MsgOut
@@ -68,6 +72,7 @@ type MsgOut
         { articleSlug : Slug
         , commentId : Int
         }
+
 
 ```
 ## Image, guest view
